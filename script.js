@@ -98,6 +98,19 @@ function createNewCard(book) {
     htmlBody.appendChild(table);
 } */
 
+function createForm() {
+    let htmlBody = document.getElementsByTagName("body");
+    
+}
+
+function addButtonListeners() {
+    let addBookButton = document.getElementById("new-card-button");
+
+    addBookButton.addEventListener("click", () => {
+        createForm();
+    })
+}
+
 let example1 = new Book("Hello", "Mr. Brown", 164, true);
 let example2 = new Book("Wus gud", "Ms. Keaton", 351, false);
 let example3 = new Book("EW EW EW", "Some Kid", 6, true);
