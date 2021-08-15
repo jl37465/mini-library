@@ -1,3 +1,10 @@
+body {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+}
+
 table, th, td{
     border: 1px solid black;
     border-collapse: collapse;
@@ -5,4 +12,18 @@ table, th, td{
 
 td {
     padding: 10px 15px 10px 15px;
+}
+
+.book-card {
+    padding: 20px 0 20px 0;
+}
+
+#card-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    width: 100%;
+}
+
+#main-container {
+    width: 90%;
 }
