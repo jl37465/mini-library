@@ -98,22 +98,49 @@ function createNewCard(book) {
     htmlBody.appendChild(table);
 } */
 
-function createForm() {
-    let htmlBody = document.getElementsByTagName("body");
-    
+let formState = false;
+
+function showForm() {
+    let form = document.getElementById("new-card-form");
+    let formDiv = document.getElementById("form-div");
+
+    form.style.animation = "form-slidein 1s forwards";
+    formDiv.style.animation = "become-opaque 1s forwards";
+    form.classList.toggle("present");
+}
+
+function removeForm() {
+    let form = document.getElementById("new-card-form");
+    let formDiv = document.getElementById("form-div");
+
+    form.style.animation = "form-slideout 1s forwards";
+    formDiv.style.animation = "become-transparent 0s forwards";
+    form.classList.toggle("present");
 }
 
 function addButtonListeners() {
     let addBookButton = document.getElementById("new-card-button");
+    let cancelButton = document.getElementById("cancel-button");
 
     addBookButton.addEventListener("click", () => {
-        createForm();
-    })
+        if (!formState) {
+            showForm();
+            formState = true;
+        }
+    });
+
+    cancelButton.addEventListener("click", () => {
+        if(formState) {
+            removeForm();
+            formState = false;
+        }
+    });
 }
 
 let example1 = new Book("Hello", "Mr. Brown", 164, true);
 let example2 = new Book("Wus gud", "Ms. Keaton", 351, false);
 let example3 = new Book("EW EW EW", "Some Kid", 6, true);
+let htmlForm = document.getElementById("new-card-form");
 
 createNewCard(example1);
 createNewCard(example2);
@@ -127,6 +154,8 @@ createNewCard(example3);
 createNewCard(example1);
 createNewCard(example2);
 createNewCard(example3);
+
+addButtonListeners();
 
 
 /* updateTable(myLibrary); */
