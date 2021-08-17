@@ -162,9 +162,7 @@ addButtonListeners();
 
 /*
 
->>>>TO DO:<<<<read.toLowerCase() === "no" || read.toLowerCase() === "n"
-- Remove table stuff and insert a new card (div) for each individual book
-with all the appropriate information. DONE >>>>><<<<<<
+>>>>TO DO:<<<<
 - Ensure that the formatting (dimensions, height, width, etc.) are all
 consistent for each card.
 - Add a button that creates a form to add a new book:
