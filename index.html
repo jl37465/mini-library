@@ -10,7 +10,7 @@
 </head>
 <body id="the-body">
     <div id="form-div">
-        <form id="new-card-form" onsubmit="return false" target="" method="post"> <!-- onsubmit="myFunction();return false" -->
+        <form id="new-card-form" onsubmit="getFormDetails();return false" target="" method="post"> <!-- onsubmit="myFunction();return false" -->
             <fieldset>
                 <legend>Add a Book to the Library!</legend>
                 <label for="title" class="input">Book Title:</label><br>
@@ -19,9 +19,13 @@
                 <input type="text" id="input-author" name="author" class="input" required><br>
                 <label for="pages" class="input">Pages: </label>
                 <input type="number" id="input-pages" name="pages" min="1" class="input" required><br>
-                <label for="read-yet" class="input">Already Read?</label>
-                <input type="checkbox" id="input-read-yet" name="read-yet" value="read-yet"><br>
-                <input type="submit" value="Add Book">
+                <!-- <label for="read-yet" class="input">Already Read?</label>
+                <input type="checkbox" id="input-read-yet" name="read-yet" value="read-yet"><br> -->
+                <select name="read-yet" id="input-read-yet">
+                    <option value="read">Read</option>
+                    <option value="not read">Not Read</option>
+                </select>
+                <input type="button" value="Add Book" id="submit-button">
                 <input type="button" value="Cancel" id="cancel-button">
             </fieldset>
             

@@ -100,6 +100,15 @@ function createNewCard(book) {
 
 let formState = false;
 
+function getFormDetails() {
+    let element = document.getElementById("new-card-form");
+    let formData = new FormData(element);
+    
+    for (entry of formData.entries()) {
+        console.log(entry[1]);
+    }
+}
+
 function showForm() {
     let form = document.getElementById("new-card-form");
     let formDiv = document.getElementById("form-div");
@@ -121,6 +130,7 @@ function removeForm() {
 function addButtonListeners() {
     let addBookButton = document.getElementById("new-card-button");
     let cancelButton = document.getElementById("cancel-button");
+    let submitButton = document.getElementById("submit-button");
 
     addBookButton.addEventListener("click", () => {
         if (!formState) {
@@ -134,6 +144,10 @@ function addButtonListeners() {
             removeForm();
             formState = false;
         }
+    });
+
+    submitButton.addEventListener("click", () => {
+        getFormDetails();
     });
 }
 
@@ -170,6 +184,8 @@ consistent for each card.
     AUTHOR?
     NO. OF PAGES?
     READ IT? (Checkbox)
+    DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+- Save to local library (check TOP for that) and create new card for each.
 - Each finished card should have an option to toggle read/unread and to
 remove the card itself.
 */
