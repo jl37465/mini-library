@@ -103,10 +103,28 @@ let formState = false;
 function getFormDetails() {
     let element = document.getElementById("new-card-form");
     let formData = new FormData(element);
+    let inputTitle = document.getElementById("input-title");
+    let inputAuthor = document.getElementById("input-author");
+    let inputPages = document.getElementById("input-pages");
+    let inputReadYet = document.getElementById("input-read-yet");
+
+    inputTitle.value = "";
+    inputAuthor.value = "";
+    inputPages.value = "";
+    inputReadYet.value = "read";
+
     
+    let entryArray = [];
+    let newCard = new Book();
+
     for (entry of formData.entries()) {
-        console.log(entry[1]);
-    }
+        entryArray.push(entry[1]); // entry[0] = key, entry[1] = value;
+        newCard[entry[0]] = entry[1];
+        console.log(newCard[entry[0]]);
+    } 
+
+    createNewCard(newCard);
+
 }
 
 function showForm() {
@@ -151,9 +169,9 @@ function addButtonListeners() {
     });
 }
 
-let example1 = new Book("Hello", "Mr. Brown", 164, true);
-let example2 = new Book("Wus gud", "Ms. Keaton", 351, false);
-let example3 = new Book("EW EW EW", "Some Kid", 6, true);
+let example1 = new Book("Hello", "Mr. Brown", 164, "Read");
+let example2 = new Book("Wus gud", "Ms. Keaton", 351, "Not Read");
+let example3 = new Book("EW EW EW", "Some Kid", 6, "Read");
 let htmlForm = document.getElementById("new-card-form");
 
 createNewCard(example1);
