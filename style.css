@@ -26,12 +26,22 @@ td {
 
 .book-card {
     padding: 20px 0 20px 0;
+    height: 300px;
+    overflow-y: scroll;     
+    width: 100%;
+    box-sizing: content-box;
+    font-size: 30px;
+    border: 2px solid black;
 }
 
 #card-container {
+    padding-top: 50px;
     display: grid;
+    justify-self: center;
     grid-template-columns: repeat(5, 1fr);
     width: 100%;
+    column-gap: 50px;
+    row-gap: 50px;
 }
 
 #input-pages {

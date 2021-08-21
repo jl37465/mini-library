@@ -177,15 +177,7 @@ let htmlForm = document.getElementById("new-card-form");
 createNewCard(example1);
 createNewCard(example2);
 createNewCard(example3);
-createNewCard(example1);
-createNewCard(example2);
-createNewCard(example3);
-createNewCard(example1);
-createNewCard(example2);
-createNewCard(example3);
-createNewCard(example1);
-createNewCard(example2);
-createNewCard(example3);
+
 
 addButtonListeners();
 
