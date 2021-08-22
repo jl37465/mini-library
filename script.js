@@ -4,19 +4,8 @@ function Book(title, author, pages, read) {
     this.title = title;
     this.author = author;
     this.pages = pages;
-    this.read = read;
-    this.readState = null;
-    this.position = null;
-    this.info = function () {
-
-        if (read.toLowerCase() === "yes" || read.toLowerCase() === "y") {
-            readState = "read";
-        } else if (read.toLowerCase() === "no" || read.toLowerCase() === "n"){
-            readState = "not read yet";
-        }
-
-        return `${title} by ${author}, ${pages} pages, ${readState}`;
-    }
+    this.read = read; // Either "Read" or "Not Read"
+    this.position = null; // Position in myLibrary array as an index.
 }
 
 function addBookToLibrary(book) {
@@ -25,78 +14,62 @@ function addBookToLibrary(book) {
     return `"${book.title}" added to library!`;
 }
 
+function removeBookFromLibrary(book) {
+    myLibrary.splice(myLibrary.indexOf(book), 1);
+    for (book in myLibrary) {
+        book.position = myLibrary.indexOf(book);
+    }
+}
+
 function createNewCard(book) {
     let cardContainer = document.getElementById("card-container");
     let newCard = document.createElement("div");
     let titleText = document.createElement("p");
     let authorText = document.createElement("p");
     let pagesText = document.createElement("p");
-    let readYetText = document.createElement("p");
-
+    let readYetToggle = document.createElement("button");
+    let deleteButton = document.createElement("button");
+    
+    newCard.className = "book-card";
     titleText.className = "title-text";
     titleText.textContent = book.title;
     authorText.className = "author-text";
     authorText.textContent = book.author;
     pagesText.className = "pages-text";
     pagesText.textContent = book.pages;
-    readYetText.className = "read-yet-text";
-    readYetText.textContent = book.read;
-    newCard.className = "book-card";
+    readYetToggle.className = "read-yet-toggle card-button";
+    readYetToggle.textContent = book.read;
+
+    readYetToggle.addEventListener("click", () => {
+        if (book.read === "Read") {
+            book.read = "Not Read";
+        } else {
+            book.read = "Read";
+        }
+        readYetToggle.textContent = book.read;
+    })
+    
+
+    deleteButton.textContent = "Remove Book\nfrom Library";
+    deleteButton.className = "delete-button card-button";
+    deleteButton.style.backgroundColor = "red";
+    deleteButton.addEventListener("click", () => {
+        cardContainer.removeChild(newCard);
+        removeBookFromLibrary(book);
+    })
 
     newCard.appendChild(titleText);
     newCard.appendChild(authorText);
     newCard.appendChild(pagesText);
-    newCard.appendChild(readYetText);
+    newCard.appendChild(readYetToggle);
+    newCard.appendChild(deleteButton);
     cardContainer.appendChild(newCard);
 
+
     addBookToLibrary(book);
-    console.log(`${book.title} card added!`)
+    console.log(`${book.title} card added!`);
+    console.log(myLibrary);
 }
-
-/* function updateTable(data) {
-    let htmlBody = document.getElementById("the-body");
-    let table = document.createElement("table");
-
-    let topRow = table.insertRow(0);
-    let titleCell = topRow.insertCell(0);
-    let authorCell = topRow.insertCell(1);
-    let pagesCell = topRow.insertCell(2);
-    let readYetCell = topRow.insertCell(3);
-
-    topRow.style.fontWeight = "bold";
-
-    titleCell.textContent = "TITLE";
-    authorCell.textContent = "AUTHOR";
-    pagesCell.textContent = "PAGES";
-    readYetCell.textContent = "READ?";
-
-
-    for (let i = 1; i < data.length + 1; i++) {
-        let newRow = table.insertRow(i);
-        let title = newRow.insertCell(0);
-        let author = newRow.insertCell(1);
-        let pages = newRow.insertCell(2);
-        let readYet = newRow.insertCell(3);
-
-        title.textContent = data[i].title;
-
-    }
-    
-    data.forEach(function(item) {
-        let newRow = table.insertRow();
-        let title = newRow.insertCell(0);
-        let author = newRow.insertCell(1);
-        let pages = newRow.insertCell(2);
-        let readYet = newRow.insertCell(3);
-        title.textContent = item.title;
-        author.textContent = item.author;
-        pages.textContent = item.pages;
-        readYet.textContent = item.read;
-    })
-
-    htmlBody.textContent = "";
-    htmlBody.appendChild(table);
-} */
 
 let formState = false;
 
@@ -108,24 +81,31 @@ function getFormDetails() {
     let inputPages = document.getElementById("input-pages");
     let inputReadYet = document.getElementById("input-read-yet");
 
-    inputTitle.value = "";
-    inputAuthor.value = "";
-    inputPages.value = "";
-    inputReadYet.value = "read";
-
-    
-    let entryArray = [];
-    let newCard = new Book();
-
     for (entry of formData.entries()) {
-        entryArray.push(entry[1]); // entry[0] = key, entry[1] = value;
-        newCard[entry[0]] = entry[1];
-        console.log(newCard[entry[0]]);
-    } 
+        if(entry[1] == "") {
+            alert("Invalid form input. Please fill out all fields correctly.");
+            return null;
+        }
+    }
+        inputTitle.value = "";
+        inputAuthor.value = "";
+        inputPages.value = "";
+        inputReadYet.value = "Read";
 
-    createNewCard(newCard);
+        
+        let entryArray = [];
+        let newCard = new Book();
 
-}
+        for (entry of formData.entries()) {
+            entryArray.push(entry[1]); // entry[0] = key, entry[1] = value;
+            newCard[entry[0]] = entry[1];
+            console.log(newCard[entry[0]]);
+        } 
+
+        createNewCard(newCard);
+    }
+
+
 
 function showForm() {
     let form = document.getElementById("new-card-form");
@@ -181,21 +161,11 @@ createNewCard(example3);
 
 addButtonListeners();
 
-
-/* updateTable(myLibrary); */
-
 /*
-
 >>>>TO DO:<<<<
-- Ensure that the formatting (dimensions, height, width, etc.) are all
-consistent for each card.
-- Add a button that creates a form to add a new book:
-    TITLE?
-    AUTHOR?
-    NO. OF PAGES?
-    READ IT? (Checkbox)
-    DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 - Save to local library (check TOP for that) and create new card for each.
-- Each finished card should have an option to toggle read/unread and to
-remove the card itself.
+- Add animations and transitions for adding/removing books if possible.
+- Look up good designs.
+- Finish footer with stats like total books, total read, etc.
+- Maybe add confirmation of book being added by form?
 */
