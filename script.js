@@ -1,5 +1,31 @@
 let myLibrary = [];
 
+function populateStorage() {
+    for (book in myLibrary) {
+        localStorage.setItem(book.position, book);
+    }
+    console.log(localStorage);
+}
+
+function storageAvailable(type) { // returns true if localStorage can be used
+    let storage;
+    try {
+        storage = window[type];
+        let x = "__storage_test__";
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+            e.code === 22 ||
+            e.code === 1014 ||
+            e.name === "QuotaExceededError" ||
+            e.name === "NE_ERROR_DOM_QUOTA_REACHED") &&
+            (storage && storage.length !== 0);
+    }
+}
+
 function Book(title, author, pages, read) {
     this.title = title;
     this.author = author;
@@ -68,7 +94,6 @@ function createNewCard(book) {
 
     addBookToLibrary(book);
     console.log(`${book.title} card added!`);
-    console.log(myLibrary);
 }
 
 let formState = false;
@@ -160,6 +185,7 @@ createNewCard(example3);
 
 
 addButtonListeners();
+populateStorage();
 
 /*
 >>>>TO DO:<<<<
