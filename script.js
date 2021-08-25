@@ -1,13 +1,19 @@
 let myLibrary = [];
+let finalLibrary = [];
 
 function populateStorage() {
-    for (book in myLibrary) {
-        localStorage.setItem(book.position, book);
+    for (book of myLibrary) {
+        let libraryJson;
+
+        localStorage.setItem(book.position, JSON.stringify(book));
+        finalLibrary[book.position] = JSON.parse(localStorage[book.position]);
+        // set localStorage, then convert that localStorage info into a final library array in JSON form for each book.
     }
-    console.log(localStorage);
+    
+    console.log(finalLibrary);
 }
 
-function storageAvailable(type) { // returns true if localStorage can be used
+/* function storageAvailable(type) { // returns true if localStorage can be used
     let storage;
     try {
         storage = window[type];
@@ -24,7 +30,7 @@ function storageAvailable(type) { // returns true if localStorage can be used
             e.name === "NE_ERROR_DOM_QUOTA_REACHED") &&
             (storage && storage.length !== 0);
     }
-}
+} */
 
 function Book(title, author, pages, read) {
     this.title = title;
@@ -37,7 +43,7 @@ function Book(title, author, pages, read) {
 function addBookToLibrary(book) {
     myLibrary.push(book);
     book.position = myLibrary.indexOf(book);
-    return `"${book.title}" added to library!`;
+    populateStorage();
 }
 
 function removeBookFromLibrary(book) {
@@ -45,6 +51,7 @@ function removeBookFromLibrary(book) {
     for (book in myLibrary) {
         book.position = myLibrary.indexOf(book);
     }
+    populateStorage();
 }
 
 function createNewCard(book) {
@@ -185,7 +192,6 @@ createNewCard(example3);
 
 
 addButtonListeners();
-populateStorage();
 
 /*
 >>>>TO DO:<<<<
@@ -195,3 +201,13 @@ populateStorage();
 - Finish footer with stats like total books, total read, etc.
 - Maybe add confirmation of book being added by form?
 */
+
+/* localStorage.removeItem(0);
+localStorage.removeItem(1);
+localStorage.removeItem(2);
+localStorage.removeItem(-1);
+localStorage.removeItem("2");
+localStorage.removeItem(undefined);
+localStorage.removeItem("library");
+localStorage.removeItem("[object Object]");
+localStorage.removeItem("myLibrary"); */
