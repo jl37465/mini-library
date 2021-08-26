@@ -2,15 +2,14 @@ let myLibrary = [];
 let finalLibrary = [];
 
 function populateStorage() {
+    finalLibrary = [];
     for (book of myLibrary) {
-        let libraryJson;
-
         localStorage.setItem(book.position, JSON.stringify(book));
         finalLibrary[book.position] = JSON.parse(localStorage[book.position]);
         // set localStorage, then convert that localStorage info into a final library array in JSON form for each book.
     }
     
-    console.log(finalLibrary);
+    console.log(localStorage);
 }
 
 /* function storageAvailable(type) { // returns true if localStorage can be used
@@ -47,9 +46,20 @@ function addBookToLibrary(book) {
 }
 
 function removeBookFromLibrary(book) {
-    myLibrary.splice(myLibrary.indexOf(book), 1);
-    for (book in myLibrary) {
-        book.position = myLibrary.indexOf(book);
+    for (entry of myLibrary) {
+        if (entry.position == book.position) {
+            localStorage.removeItem(book.position);
+            myLibrary.splice(myLibrary.indexOf(entry), 1);
+
+            let nextBook = myLibrary[entry];
+            if (typeof nextBook !== "undefined") {
+                localStorage.removeItem(myLibrary.indexOf(nextBook));
+            }
+        }
+        // set localStorage, then convert that localStorage info into a final library array in JSON form for each book.
+    }
+    for (thingy of myLibrary) {
+        thingy.position = myLibrary.indexOf(thingy);
     }
     populateStorage();
 }
