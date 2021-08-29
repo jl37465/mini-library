@@ -3,13 +3,14 @@ let finalLibrary = [];
 
 function populateStorage() {
     finalLibrary = [];
-    for (book of myLibrary) {
-        localStorage.setItem(book.position, JSON.stringify(book));
-        finalLibrary[book.position] = JSON.parse(localStorage[book.position]);
+    for (let i = 0; i < localStorage.length; i++) {
+       /*  localStorage.setItem(book.position, JSON.stringify(book));
+        finalLibrary[book.position] = JSON.parse(localStorage[book.position]); */
+        finalLibrary[i] = JSON.parse(localStorage.getItem(localStorage.key(i)));
         // set localStorage, then convert that localStorage info into a final library array in JSON form for each book.
     }
-    
-    console.log(localStorage);
+    console.log("localStorage: " + JSON.stringify(localStorage));
+    console.log("finalLibrary: " + finalLibrary);
 }
 
 /* function storageAvailable(type) { // returns true if localStorage can be used
@@ -40,28 +41,47 @@ function Book(title, author, pages, read) {
 }
 
 function addBookToLibrary(book) {
-    myLibrary.push(book);
-    book.position = myLibrary.indexOf(book);
+    book.position = localStorage.length;
+    localStorage.setItem(book.position, JSON.stringify(book));
     populateStorage();
+    
 }
 
 function removeBookFromLibrary(book) {
-    for (entry of myLibrary) {
+    if (finalLibrary.length === 1) {
+        finalLibrary = [];
+        localStorage.clear();
+    } else {
+        for (entry of finalLibrary) {
         if (entry.position == book.position) {
             localStorage.removeItem(book.position);
-            myLibrary.splice(myLibrary.indexOf(entry), 1);
+            populateStorage();
 
-            let nextBook = myLibrary[entry];
+            let nextBook = finalLibrary[entry.position];
             if (typeof nextBook !== "undefined") {
-                localStorage.removeItem(myLibrary.indexOf(nextBook));
+                localStorage.removeItem(finalLibrary.indexOf(nextBook));
+                populateStorage();
             }
         }
         // set localStorage, then convert that localStorage info into a final library array in JSON form for each book.
+        }
+        for (thingy of finalLibrary) {
+            thingy.position = finalLibrary.indexOf(thingy);
+        }
     }
-    for (thingy of myLibrary) {
-        thingy.position = myLibrary.indexOf(thingy);
-    }
+    
     populateStorage();
+}
+
+function changeReadStatus(book) {
+    if (book.read === "Read") {
+        book.read = "Not Read";
+    } else {
+        book.read = "Read";
+    }
+    finalLibrary[book.position] = book;
+
+
 }
 
 function createNewCard(book) {
@@ -84,11 +104,7 @@ function createNewCard(book) {
     readYetToggle.textContent = book.read;
 
     readYetToggle.addEventListener("click", () => {
-        if (book.read === "Read") {
-            book.read = "Not Read";
-        } else {
-            book.read = "Read";
-        }
+        changeReadStatus(book);
         readYetToggle.textContent = book.read;
     })
     
@@ -191,17 +207,27 @@ function addButtonListeners() {
     });
 }
 
+function initalize() {
+    if (localStorage.length) {
+        for (book in localStorage) {
+            createNewCard(localStorage.getItem(book));
+        }
+    }
+    
+}
+
 let example1 = new Book("Hello", "Mr. Brown", 164, "Read");
 let example2 = new Book("Wus gud", "Ms. Keaton", 351, "Not Read");
 let example3 = new Book("EW EW EW", "Some Kid", 6, "Read");
 let htmlForm = document.getElementById("new-card-form");
 
-createNewCard(example1);
-createNewCard(example2);
-createNewCard(example3);
-
-
+populateStorage();
+initalize();
 addButtonListeners();
+
+/* localStorage.clear();
+finalLibrary = []; */
+
 
 /*
 >>>>TO DO:<<<<
