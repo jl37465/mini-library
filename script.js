@@ -3,12 +3,12 @@ let finalLibrary = [];
 
 function populateStorage() {
     finalLibrary = [];
-    for (let i = 0; i < localStorage.length; i++) {
-       /*  localStorage.setItem(book.position, JSON.stringify(book));
-        finalLibrary[book.position] = JSON.parse(localStorage[book.position]); */
-        finalLibrary[i] = JSON.parse(localStorage.getItem(localStorage.key(i)));
-        // set localStorage, then convert that localStorage info into a final library array in JSON form for each book.
-    }
+
+    Object.keys(localStorage).forEach((key) => {
+        let finalJson = JSON.parse(localStorage.getItem(key));
+
+        finalLibrary[finalJson.position] = finalJson;
+    })
     console.log("localStorage: " + JSON.stringify(localStorage));
     console.log("finalLibrary: " + finalLibrary);
 }
@@ -85,6 +85,8 @@ function changeReadStatus(book) {
 }
 
 function createNewCard(book) {
+
+    let jsonBook = JSON.parse(book);
     let cardContainer = document.getElementById("card-container");
     let newCard = document.createElement("div");
     let titleText = document.createElement("p");
@@ -95,17 +97,17 @@ function createNewCard(book) {
     
     newCard.className = "book-card";
     titleText.className = "title-text";
-    titleText.textContent = book.title;
+    titleText.textContent = jsonBook.title;
     authorText.className = "author-text";
-    authorText.textContent = book.author;
+    authorText.textContent = jsonBook.author;
     pagesText.className = "pages-text";
-    pagesText.textContent = book.pages;
+    pagesText.textContent = jsonBook.pages;
     readYetToggle.className = "read-yet-toggle card-button";
-    readYetToggle.textContent = book.read;
+    readYetToggle.textContent = jsonBook.read;
 
     readYetToggle.addEventListener("click", () => {
-        changeReadStatus(book);
-        readYetToggle.textContent = book.read;
+        changeReadStatus(jsonBook);
+        readYetToggle.textContent = jsonBook.read;
     })
     
 
@@ -114,7 +116,7 @@ function createNewCard(book) {
     deleteButton.style.backgroundColor = "red";
     deleteButton.addEventListener("click", () => {
         cardContainer.removeChild(newCard);
-        removeBookFromLibrary(book);
+        removeBookFromLibrary(jsonBook);
     })
 
     newCard.appendChild(titleText);
@@ -125,7 +127,7 @@ function createNewCard(book) {
     cardContainer.appendChild(newCard);
 
 
-    addBookToLibrary(book);
+    addBookToLibrary(jsonBook);
     console.log(`${book.title} card added!`);
 }
 
@@ -145,22 +147,23 @@ function getFormDetails() {
             return null;
         }
     }
-        inputTitle.value = "";
-        inputAuthor.value = "";
-        inputPages.value = "";
-        inputReadYet.value = "Read";
 
-        
-        let entryArray = [];
-        let newCard = new Book();
+    inputTitle.value = "";
+    inputAuthor.value = "";
+    inputPages.value = "";
+    inputReadYet.value = "Read";
 
-        for (entry of formData.entries()) {
-            entryArray.push(entry[1]); // entry[0] = key, entry[1] = value;
-            newCard[entry[0]] = entry[1];
-            console.log(newCard[entry[0]]);
-        } 
+    
+    let entryArray = [];
+    let newCard = new Book();
 
-        createNewCard(newCard);
+    for (entry of formData.entries()) {
+        entryArray.push(entry[1]); // entry[0] = key, entry[1] = value;
+        newCard[entry[0]] = entry[1];
+        console.log(newCard[entry[0]]);
+    } 
+    console.log(newCard);
+    createNewCard(JSON.stringify(newCard));
     }
 
 
@@ -208,11 +211,14 @@ function addButtonListeners() {
 }
 
 function initalize() {
-    if (localStorage.length) {
-        for (book in localStorage) {
-            createNewCard(localStorage.getItem(book));
+    /* if (localStorage.length > 0) {
+        for (key in localStorage) {
+            createNewCard(key);
         }
-    }
+    } */
+    Object.keys(localStorage).forEach((key) => {
+        createNewCard(localStorage.getItem(key));
+    })
     
 }
 
@@ -231,7 +237,7 @@ finalLibrary = []; */
 
 /*
 >>>>TO DO:<<<<
-- Save to local library (check TOP for that) and create new card for each.
+- BUGS = IT'S STILL DOING THE MULTIPLYING THING????
 - Add animations and transitions for adding/removing books if possible.
 - Look up good designs.
 - Finish footer with stats like total books, total read, etc.
