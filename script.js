@@ -4,11 +4,16 @@ let finalLibrary = [];
 function populateStorage() {
     finalLibrary = [];
 
-    Object.keys(localStorage).forEach((key) => {
+    /* Object.keys(localStorage).forEach((key) => {
         let finalJson = JSON.parse(localStorage.getItem(key));
 
         finalLibrary[finalJson.position] = finalJson;
-    })
+    }) */
+    for (let i = 0; i < localStorage.length - 1; i++) {
+        let finalJson = JSON.parse(localStorage.getItem(i));
+
+        finalLibrary[i] = finalJson;
+    }
     console.log("localStorage: " + JSON.stringify(localStorage));
     console.log("finalLibrary: " + finalLibrary);
 }
@@ -43,7 +48,7 @@ function Book(title, author, pages, read) {
 function addBookToLibrary(book) {
     book.position = localStorage.length;
     localStorage.setItem(book.position, JSON.stringify(book));
-    populateStorage();
+    finalLibrary.push(book);
     
 }
 
@@ -53,17 +58,17 @@ function removeBookFromLibrary(book) {
         localStorage.clear();
     } else {
         for (entry of finalLibrary) {
-        if (entry.position == book.position) {
-            localStorage.removeItem(book.position);
-            populateStorage();
-
-            let nextBook = finalLibrary[entry.position];
-            if (typeof nextBook !== "undefined") {
-                localStorage.removeItem(finalLibrary.indexOf(nextBook));
+            if (entry.position == book.position) {
+                localStorage.removeItem(book.position);
                 populateStorage();
+
+                let nextBook = finalLibrary[entry.position];
+                if (typeof nextBook !== "undefined") {
+                    localStorage.removeItem(finalLibrary.indexOf(nextBook));
+                    populateStorage();
+                }
             }
-        }
-        // set localStorage, then convert that localStorage info into a final library array in JSON form for each book.
+            // set localStorage, then convert that localStorage info into a final library array in JSON form for each book.
         }
         for (thingy of finalLibrary) {
             thingy.position = finalLibrary.indexOf(thingy);
@@ -128,7 +133,7 @@ function createNewCard(book) {
 
 
     addBookToLibrary(jsonBook);
-    console.log(`${book.title} card added!`);
+    console.log(`${jsonBook.title} card added!`);
 }
 
 let formState = false;
@@ -216,8 +221,8 @@ function initalize() {
             createNewCard(key);
         }
     } */
-    Object.keys(localStorage).forEach((key) => {
-        createNewCard(localStorage.getItem(key));
+    Object.keys(localStorage).forEach((key, value, thing) => {
+        createNewCard(localStorage.getItem(key, value));
     })
     
 }
@@ -227,7 +232,6 @@ let example2 = new Book("Wus gud", "Ms. Keaton", 351, "Not Read");
 let example3 = new Book("EW EW EW", "Some Kid", 6, "Read");
 let htmlForm = document.getElementById("new-card-form");
 
-populateStorage();
 initalize();
 addButtonListeners();
 
