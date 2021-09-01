@@ -1,4 +1,3 @@
-let myLibrary = [];
 let finalLibrary = [];
 
 function populateStorage() {
@@ -9,13 +8,13 @@ function populateStorage() {
 
         finalLibrary[finalJson.position] = finalJson;
     }) */
-    for (let i = 0; i < localStorage.length - 1; i++) {
+    for (let i = 0; i < localStorage.length; i++) {
         let finalJson = JSON.parse(localStorage.getItem(i));
 
         finalLibrary[i] = finalJson;
     }
     console.log("localStorage: " + JSON.stringify(localStorage));
-    console.log("finalLibrary: " + finalLibrary);
+    console.log("finalLibrary: " + JSON.parse(JSON.stringify(finalLibrary)));
 }
 
 /* function storageAvailable(type) { // returns true if localStorage can be used
@@ -42,24 +41,31 @@ function Book(title, author, pages, read) {
     this.author = author;
     this.pages = pages;
     this.read = read; // Either "Read" or "Not Read"
-    this.position = null; // Position in myLibrary array as an index.
+    this.position = null; // Position in finalLibrary array as an index.
 }
 
 function addBookToLibrary(book) {
-    book.position = localStorage.length;
+    if (!localStorage.length) {
+        book.position = 0;
+    } else {
+        finalLibrary.push(book);
+        book.position = finalLibrary.indexOf(book);
+    }
+    
     localStorage.setItem(book.position, JSON.stringify(book));
-    finalLibrary.push(book);
     
 }
 
 function removeBookFromLibrary(book) {
-    if (finalLibrary.length === 1) {
+    let jsonBook = book;
+
+    /* if (finalLibrary.length === 1) {
         finalLibrary = [];
         localStorage.clear();
     } else {
-        for (entry of finalLibrary) {
-            if (entry.position == book.position) {
-                localStorage.removeItem(book.position);
+        Object.keys(localStorage).forEach((key) => {
+            if (localStorage.getItem(key).position == jsonBook.position) {
+                localStorage.removeItem(jsonBook.position);
                 populateStorage();
 
                 let nextBook = finalLibrary[entry.position];
@@ -69,13 +75,23 @@ function removeBookFromLibrary(book) {
                 }
             }
             // set localStorage, then convert that localStorage info into a final library array in JSON form for each book.
-        }
-        for (thingy of finalLibrary) {
-            thingy.position = finalLibrary.indexOf(thingy);
-        }
+        })
+        
+        Object.keys(localStorage).forEach((key) => {
+            localStorage.getItem(key).position = finalLibrary.indexOf(key);
+        })
+            
     }
     
-    populateStorage();
+    populateStorage(); */
+
+    finalLibrary.splice(book.position, 1);
+    localStorage.clear();
+    for (book in finalLibrary) {
+        localStorage.setItem(book.position, JSON.stringify(book));
+    };
+    console.log("New localStorage: " + JSON.stringify(localStorage));
+    console.log("New finalLibrary: " + JSON.parse(JSON.stringify(finalLibrary)));
 }
 
 function changeReadStatus(book) {
@@ -84,7 +100,9 @@ function changeReadStatus(book) {
     } else {
         book.read = "Read";
     }
-    finalLibrary[book.position] = book;
+
+    let newBook = book;
+    localStorage.setItem(book.position, JSON.stringify(newBook));
 
 
 }
@@ -133,7 +151,7 @@ function createNewCard(book) {
 
 
     addBookToLibrary(jsonBook);
-    console.log(`${jsonBook.title} card added!`);
+    console.log(`${jsonBook.title} card added!!!`);
 }
 
 let formState = false;
@@ -216,14 +234,17 @@ function addButtonListeners() {
 }
 
 function initalize() {
-    /* if (localStorage.length > 0) {
-        for (key in localStorage) {
-            createNewCard(key);
+/*     if (localStorage.length > 0) {
+        for (book in localStorage) {
+            createNewCard(localStorage.getItem(book));
+            console.log(localStorage.getItem(book));
         }
     } */
-    Object.keys(localStorage).forEach((key, value, thing) => {
-        createNewCard(localStorage.getItem(key, value));
+    if (localStorage.length > 0) {
+        Object.keys(localStorage).forEach((key) => {
+        createNewCard(localStorage.getItem(key));
     })
+}
     
 }
 
@@ -241,7 +262,11 @@ finalLibrary = []; */
 
 /*
 >>>>TO DO:<<<<
-- BUGS = IT'S STILL DOING THE MULTIPLYING THING????
+
+BUGS <<<<<<<<
+ - For some reason, in addBookToLibrary, the position of the book reads undefined and doesn't assign a value properly. Maybe change to JSON?
+
+
 - Add animations and transitions for adding/removing books if possible.
 - Look up good designs.
 - Finish footer with stats like total books, total read, etc.
