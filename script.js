@@ -45,17 +45,20 @@ function Book(title, author, pages, read) {
 }
 
 function addBookToLibrary(book) {
-    finalLibrary.push((book));
+
+    let stringBook = JSON.stringify(book);
+    finalLibrary.push(stringBook);
+    console.log("Stringified book: " + stringBook);
 
     if (localStorage.length === 0) {
         book.position = 0;
         console.log("Book position: " + finalLibrary.indexOf(book));
     } else {
-        book.position = finalLibrary.indexOf(book);
+        book.position = finalLibrary.indexOf(stringBook);
         console.log("Book position: " + finalLibrary.indexOf(book));
     }
-    
-    localStorage.setItem(book.position, JSON.parse(JSON.stringify(book)));
+
+    localStorage.setItem(book.position, stringBook);
     
 }
 
@@ -87,12 +90,12 @@ function removeBookFromLibrary(book) {
     
     populateStorage(); */
 
-    let jsonBook = book;
-    finalLibrary.splice(jsonBook.position, 1);
+    let stringBook = JSON.stringify(book);
+    finalLibrary.splice(book.position, 1);
     localStorage.clear();
     if (finalLibrary.length !== 0) {
         for (let i = 0; i < finalLibrary.length; i++) {
-        localStorage.setItem(i, JSON.stringify(book));
+        localStorage.setItem(i, finalLibrary[i]);
     };
     console.log("New localStorage: " + localStorage);
     console.log("New finalLibrary: " + JSON.parse(JSON.stringify(finalLibrary)));
@@ -112,15 +115,15 @@ function changeReadStatus(book) {
         book.read = "Read";
     }
 
-    let newBook = book;
-    localStorage.setItem(book.position, JSON.stringify(newBook));
+    let stringBook = JSON.stringify(book);
+    localStorage.setItem(book.position, newBook);
 
 
 }
 
 function createNewCard(book) {
 
-    let jsonBook = JSON.parse(book);
+    let jsonBook = book;
     let cardContainer = document.getElementById("card-container");
     let newCard = document.createElement("div");
     let titleText = document.createElement("p");
@@ -161,7 +164,7 @@ function createNewCard(book) {
     cardContainer.appendChild(newCard);
 
 
-    addBookToLibrary(JSON.stringify(jsonBook));
+    addBookToLibrary(jsonBook);
     console.log(`${jsonBook.title} card added!!!`);
 }
 
@@ -197,7 +200,7 @@ function getFormDetails() {
         console.log(newCard[entry[0]]);
     } 
     console.log(newCard);
-    createNewCard(JSON.stringify(newCard));
+    createNewCard(newCard);
     }
 
 
@@ -249,7 +252,9 @@ function initalize() {
     console.log("localStorage: " + (localStorage));
     if (localStorage.length > 0) {
         Object.keys(localStorage).forEach((key) => {
-        createNewCard(JSON.stringify(localStorage.getItem(key)));
+            console.log("It looks like: " + (localStorage.getItem(key)));
+            let parsedBook = JSON.parse(localStorage.getItem(key));
+            createNewCard(parsedBook);
     })
 }
     
@@ -276,7 +281,6 @@ finalLibrary = []; */
 >>>>TO DO:<<<<
 
 BUGS <<<<<<<<
-- When initialising, the card returns "object Object" instead of the actual object values. Problem with how they are stored and received, check addBookToLibrary. They SHOULD be a stringify when called to createNewCard, i.e. "{title: efwef, pages: aefaf, etc.}" with double quotes included.
  - Currently, the read/unread button doesn't seem to change the value within localStorage.
 
 
