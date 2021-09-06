@@ -90,7 +90,7 @@ function removeBookFromLibrary(book) {
 function changeReadStatus(book) {
     let bookPosition = getPositionInArray(book);
     let parsedBook = JSON.parse(finalLibrary[bookPosition]);
-    if (book.read === "Read") {
+    if (parsedBook.read === "Read") {
         parsedBook.read = "Not Read";
     } else {
         parsedBook.read = "Read";
@@ -120,13 +120,13 @@ function createNewCard(book) {
     authorText.className = "author-text";
     authorText.textContent = jsonBook.author;
     pagesText.className = "pages-text";
-    pagesText.textContent = jsonBook.pages;
+    pagesText.textContent = jsonBook.pages + " pages";
     readYetToggle.className = "read-yet-toggle card-button";
     readYetToggle.textContent = jsonBook.read;
 
     readYetToggle.addEventListener("click", () => {
         changeReadStatus(jsonBook);
-        readYetToggle.textContent = jsonBook.read;
+        readYetToggle.textContent = JSON.parse(finalLibrary[getPositionInArray(jsonBook)]).read;
     })
     
 
@@ -224,8 +224,25 @@ function addButtonListeners() {
         }
     });
 
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && formState) {
+            removeForm();
+            formState = false;
+        }
+    });
+
     submitButton.addEventListener("click", () => {
         getFormDetails();
+        removeForm();
+        formState = false;
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && formState) {
+            getFormDetails();
+            removeForm();
+            formState = false;
+        }
     });
 }
 
@@ -240,7 +257,7 @@ function initalize() {
             createNewCard(parsedBook);
         }
     }
-    initalStart = false;
+    initialStart = false;
     
 }
 
@@ -266,10 +283,7 @@ finalLibrary = []; */
 >>>>TO DO:<<<<
 
 BUGS <<<<<<<<
- - 
- - Currently, the read/unread button doesn't seem to change the value within localStorage. (UPDATE: the actual value changes, just need to get the button to change to match now. EASY STUFF!!!!)
-
-
+ 
 - Add animations and transitions for adding/removing books if possible.
 - Look up good designs.
 - Finish footer with stats like total books, total read, etc.

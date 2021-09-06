@@ -25,29 +25,56 @@ td {
     padding: 10px 15px 10px 15px;
 }
 
+/* >>>>> CLASSES START HERE <<<<< */
+
+.author-text {
+    font-size: 30px;
+}
+
 .book-card {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
     display: flex;
+    position: relative;
     flex-direction: column;
-    padding: 20px 0 20px 0;
-    height: 350px;
-    overflow-y: scroll;     
-    width: 100%;
-    box-sizing: content-box;
+    align-items: center;
+    padding: 20px 20px 0px 20px;  
+    width: 400px;
+    box-sizing: border-box;
     font-size: 30px;
     border: 2px solid black;
 }
 
-.read-yet-toggle {
-    margin-bottom: 10px;
+.card-button {
+    position: absolute;
 }
 
+.delete-button {
+    bottom: 20px;
+}
+
+.pages-text {
+    padding: 20px 0 70px 0;
+}
+
+.read-yet-toggle {
+    bottom: 60px;
+}
+
+.title-text {
+    font-size: 40px;
+}
+
+/* >>>>> ID'S START HERE <<<<< */
+
 #card-container {
-    padding-top: 50px;
+    padding-top: 150px;
     display: grid;
     justify-self: center;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     width: 100%;
-    column-gap: 50px;
+    column-gap: 30px;
     row-gap: 50px;
 }
 
@@ -111,8 +138,3 @@ td {
         opacity: 1;
     }
 }
-
-
-/* #new-card-form.show {
-    display: block;
-} */
